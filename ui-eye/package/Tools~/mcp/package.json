@@ -1,0 +1,16 @@
+{
+  "name": "ui-eye-mcp-server",
+  "version": "0.1.0",
+  "description": "MCP server for the UI machine eye: the verdict in numbers and the panel's contact sheet come straight into the conversation.",
+  "type": "module",
+  "main": "index.js",
+  "bin": {
+    "ui-eye-mcp-server": "index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

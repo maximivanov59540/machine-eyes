@@ -1,0 +1,75 @@
+/* Калибровочная панель ui-eye. Не дизайн: размеры подобраны так, чтобы состояния «длинный» и
+   «за-краем» гарантированно давали находки, а «короткий» — нет (см. UiEyeProbe.Panel). */
+
+.probe {
+    position: absolute;
+    left: 40px;
+    top: 40px;
+    width: 420px;
+    padding: 16px;
+    background-color: rgb(40, 36, 30);
+    border-color: rgb(120, 100, 70);
+    border-width: 2px;
+    border-radius: 6px;
+}
+
+/* 1700 + 420 = 2120: шире экрана 1920, но уже 2560. */
+.probe--offscreen {
+    left: 1700px;
+}
+
+.probe__title {
+    font-size: 28px;
+    -unity-font-style: bold;
+    color: rgb(230, 224, 210);
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.probe__body {
+    margin-top: 8px;
+    font-size: 16px;
+    color: rgb(200, 192, 176);
+    white-space: normal;
+}
+
+.probe__row {
+    flex-direction: row;
+    align-items: center;
+    margin-top: 12px;
+}
+
+.probe__badge {
+    width: 120px;
+    font-size: 18px;
+    color: rgb(230, 224, 210);
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.probe__action {
+    margin-left: 12px;
+}
+
+/* Ниже — положительные контроли трёх проверок, добавленные после первого прогона.
+   Правила стоят после базовых: при равной специфичности побеждает позднее. */
+
+/* Ряд без высоты: значок и кнопка висят на нулевой линии. Контроль «нулевой размер». */
+.probe__row--flat {
+    height: 0px;
+    min-height: 0px;
+}
+
+/* Значок шире ряда (384) и не сжимается: он и кнопка за ним выходят за ряд. Контроль «за родителя». */
+.probe__badge--wide {
+    width: 520px;
+    flex-shrink: 0;
+}
+
+/* Переход стиля на 10 секунд, линейный: кадр меняется от чтения к чтению. Контроль «не устоялся». */
+.probe--moving {
+    left: 400px;
+    transition-property: left;
+    transition-duration: 10s;
+    transition-timing-function: linear;
+}

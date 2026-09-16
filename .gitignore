@@ -1,0 +1,15 @@
+# Build output
+bin/
+obj/
+out/
+
+# Unity project folders that Unity rebuilds by itself
+Library/
+Temp/
+Logs/
+UserSettings/
+
+# Never in the repository: DLLs (Unity's own are not ours to share) and the UI Toolkit
+# type table, which ui-eye snaps from the user's own Unity.
+*.dll
+uitk-types.json

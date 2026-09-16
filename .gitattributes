@@ -1,0 +1,6 @@
+# LF line endings in the repository and in every working copy.
+* text=auto eol=lf
+
+# Binary files: line endings are never touched.
+*.png binary
+*.jpg binary

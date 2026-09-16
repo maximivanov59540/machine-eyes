@@ -1,0 +1,13 @@
+{
+  "name": "ui-eye",
+  "version": "0.1.0",
+  "description": "Machine eye for UI Toolkit panels: one cold batch run of Unity shoots a panel in several states and screen sizes — frames, an element tree with numbers, findings, a signature.",
+  "type": "module",
+  "main": "runner.js",
+  "bin": {
+    "ui-eye": "ui-eye.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

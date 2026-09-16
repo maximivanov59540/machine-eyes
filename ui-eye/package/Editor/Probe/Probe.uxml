@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="Probe.uss" />
+    <ui:VisualElement name="panel" class="probe">
+        <ui:Label name="title" text="Проба" class="probe__title" />
+        <ui:Label name="body" text="Абзац." class="probe__body" />
+        <ui:VisualElement name="row" class="probe__row">
+            <ui:Label name="badge" text="12" class="probe__badge" />
+            <ui:Button name="action" text="Действие" class="probe__action" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
