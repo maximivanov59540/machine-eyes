@@ -30,6 +30,19 @@ your code looks up against the panel's UXML. Its findings stop the shot in about
 
 The numbers are the verdict. Whether the panel looks good is for a person to decide from the sheet.
 
+## What it is for
+
+ui-eye was built for long autonomous runs. An agent works on a panel — writes it, adds elements, changes the markup —
+and then shoots it and reads the verdict itself. Nobody has to open the editor, take a screenshot and send it back, so
+the loop closes without a person standing in it, and the run does not stop at every change.
+
+That is why the answers look the way they do. The verdict is numbers because the agent cannot look at a picture. The
+run is one cold batch because nobody is sitting at the machine. The signature says what was loaded because the agent
+has to show what it measured on. The three commands are also an MCP server because that is how the agent reaches them.
+
+The price is in the requirements below: a shot needs the Unity editor closed on the project, and takes 25–60 seconds.
+For the length of an autonomous run, the editor belongs to the agent.
+
 ## Requirements
 
 - **Windows.** Version 0.1 shoots only on Windows. On other systems the shot and the type table refuse with a message;
