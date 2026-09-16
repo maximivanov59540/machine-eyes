@@ -2,7 +2,7 @@
 
 Notable changes to the `com.machine-eyes.ui-eye` package. Versions follow Semantic Versioning.
 
-## [Unreleased]
+## [0.1.3] - 2026-09-16
 
 ### Changed
 
