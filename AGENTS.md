@@ -6,7 +6,7 @@ Instructions for AI agents that work in this repository or connect ui-eye to a U
 ## What is here
 
 - `ui-eye/package`: the Unity package `com.machine-eyes.ui-eye`. `Editor/` holds the shooter that runs inside Unity, the
-  panel registry, and the calibration panel `проба`. `Tools~/` holds the Node tools: the command line (`ui-eye.js`), the
+  panel registry, and the calibration panel `probe`. `Tools~/` holds the Node tools: the command line (`ui-eye.js`), the
   linter (`lint.js`), the type table (`types.js`), the calibration (`calibrate.js`) and the MCP server (`mcp/index.js`).
 - `ui-eye/calibration`: a minimal Unity project that uses the package through `file:../../package`. The calibration runs
   on it.
@@ -37,14 +37,14 @@ Each step has a command and the answer that means the step is done. `<tools>` is
 2. **Package.** Add `com.machine-eyes.ui-eye` to `<project>/Packages/manifest.json` (README, Install). Check:
    `node <tools>/lint.js --project <project>` exits with 0 or 1, and in the list after `панели (сверено = вызовов-поисков ×
    панель):` the report has a line that starts with
-   `«проба» — Packages/com.machine-eyes.ui-eye/Editor/Probe/Probe.uxml · элементов 6 · сверено 22 · находок 0`.
+   `«probe» — Packages/com.machine-eyes.ui-eye/Editor/Probe/Probe.uxml · элементов 6 · сверено 22 · находок 0`.
    Code 5: the project was not found. Code 7: nothing was checked.
 3. **Unity.** The editor of the version in `<project>/ProjectSettings/ProjectVersion.txt` is at
    `C:\Program Files\Unity\Hub\Editor\<version>\Editor\Unity.exe`, or `UIEYE_UNITY` points to it. Checked by step 4:
    without it the answer is code 7 with `Unity не найдена: <path>`.
 4. **Registry.** With the editor closed: `node <tools>/ui-eye.js --list --project <project>` exits with 0, and under
-   `панели в реестре:` the report lists `«проба»` with six states. Your panels appear here after step 6.
-5. **A shot.** `node <tools>/ui-eye.js --panel проба --states короткий --sizes 1920x1080 --project <project>` prints
+   `панели в реестре:` the report lists `«probe»` with six states. Your panels appear here after step 6.
+5. **A shot.** `node <tools>/ui-eye.js --panel probe --states short --sizes 1920x1080 --project <project>` prints
    `итог: ЧИСТО — кадров 1, из них с находками 0 (код 0)` and a `лист:` line with the path to the sheet.
 6. **Your panel.** Register it (README, Registering your panels). Check the pairing first:
    `node <tools>/lint.js --panel <name> --project <project>` exits with 0, `сверено` is above zero, and `не проверено: 0`

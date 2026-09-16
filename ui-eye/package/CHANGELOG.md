@@ -2,6 +2,20 @@
 
 Notable changes to the `com.machine-eyes.ui-eye` package. Versions follow Semantic Versioning.
 
+## [Unreleased]
+
+### Changed
+
+- **Breaking.** The calibration panel is named `probe`, and its states are `short`, `long`, `offscreen`, `flattened`,
+  `outside-parent` and `moving`. Their descriptions are English too. The names are what you type, so anything that
+  named them in Russian must be changed: `--panel probe --states short`.
+- The tool's own vocabulary is untouched: the findings (`текст-не-влез`, `за-краем`, `за-родителя`,
+  `нулевой-размер`, `не-устоялся`), the exit-code words and the command-line flags are what the answer is written in,
+  and an agent matches them rather than reads them. The state `за-краем` and the finding `за-краем` were the same
+  word in two roles; only the state was renamed.
+
+Calibration after the rename: 129 right out of 129.
+
 ## [0.1.2] - 2026-09-16
 
 ### Changed

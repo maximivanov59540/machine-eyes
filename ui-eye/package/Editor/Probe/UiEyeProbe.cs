@@ -1,7 +1,7 @@
 namespace UiEye
 {
     /// <summary>
-    /// Панель «проба» — калибровка ui-eye. Заодно образец регистрации: статический метод без параметров, который
+    /// Панель «probe» — калибровка ui-eye. Заодно образец регистрации: статический метод без параметров, который
     /// возвращает панель, с атрибутом <see cref="UiEyePanelAttribute"/>. Панель своего проекта регистрируется так же —
     /// своим файлом в своей сборке редактора; пакет не правится.
     /// </summary>
@@ -12,13 +12,13 @@ namespace UiEye
         /// </summary>
         /// <remarks>
         /// Ожидание, записанное ДО первого запуска, — по нему судят, исправен ли прибор:
-        /// «короткий» — находок нет на обоих размерах; «длинный» — не влезли заголовок и значок, а абзац
-        /// с переносом НЕ находка (иначе прибор путает перенос с обрезкой); «за-краем» — на 1920 панель
+        /// «short» — находок нет на обоих размерах; «long» — не влезли заголовок и значок, а абзац
+        /// с переносом НЕ находка (иначе прибор путает перенос с обрезкой); «offscreen» — на 1920 панель
         /// выходит за экран, на 2560 нет.
         /// Добавлены после первого прогона, когда оказалось, что три проверки ни разу не краснели:
-        /// «сплющенный» — нулевой размер у <c>#row</c>; «вне-родителя» — значок и кнопка за рядом;
-        /// «в-движении» — кадр не устаивается (переход стиля).
-        /// Для «сплющенного» первое ожидание было только «нулевой размер» у <c>#row</c> — и кадр показал, что ошибся
+        /// «flattened» — нулевой размер у <c>#row</c>; «outside-parent» — значок и кнопка за рядом;
+        /// «moving» — кадр не устаивается (переход стиля).
+        /// Для «flattened» первое ожидание было только «нулевой размер» у <c>#row</c> — и кадр показал, что ошибся
         /// автор ожидания, а не прибор: дети ряда получают его нулевую высоту пределом, «12» на кадре не видно вовсе,
         /// кнопка сжата до 22 px. Поэтому там же честно стоят две находки «текст не влез».
         /// </remarks>
@@ -26,12 +26,12 @@ namespace UiEye
         public static UiEyePanel Panel()
         {
             return new UiEyePanel(
-                "проба",
-                "калибровка ui-eye: у каждого состояния заранее известен правильный ответ",
+                "probe",
+                "ui-eye calibration: every state has its right answer known in advance",
                 UiEyePanels.Folder + "/Probe/Probe.uxml",
                 new UiEyeState(
-                    "короткий",
-                    "всё помещается — находок быть не должно",
+                    "short",
+                    "everything fits - there must be no findings",
                     root =>
                     {
                         UiEyeFill.Text(root, "title", "Probe");
@@ -39,8 +39,8 @@ namespace UiEye
                         UiEyeFill.Text(root, "badge", "12");
                     }),
                 new UiEyeState(
-                    "длинный",
-                    "заголовок и значок не влезают; длинный абзац переносится и находкой не считается",
+                    "long",
+                    "the heading and the badge do not fit; the long paragraph wraps and is not a finding",
                     root =>
                     {
                         UiEyeFill.Text(root, "title", "A heading that is certainly too wide to fit the width of this panel");
@@ -52,8 +52,8 @@ namespace UiEye
                         UiEyeFill.Text(root, "badge", "1 234 567 890 coins");
                     }),
                 new UiEyeState(
-                    "за-краем",
-                    "панель сдвинута вправо: на 1920 выходит за край экрана, на 2560 помещается",
+                    "offscreen",
+                    "the panel is pushed right: beyond the screen at 1920, inside it at 2560",
                     root =>
                     {
                         UiEyeFill.Text(root, "title", "Probe");
@@ -62,8 +62,8 @@ namespace UiEye
                         UiEyeFill.AddClass(root, "panel", "probe--offscreen");
                     }),
                 new UiEyeState(
-                    "сплющенный",
-                    "ряд сплющен в ноль по высоте — «нулевой размер» у #row; значок и кнопка сплющены с ним, их текст не влезает",
+                    "flattened",
+                    "the row is flattened to zero height - zero size on #row; the badge and the button go with it, their text does not fit",
                     root =>
                     {
                         UiEyeFill.Text(root, "title", "Probe");
@@ -72,8 +72,8 @@ namespace UiEye
                         UiEyeFill.AddClass(root, "row", "probe__row--flat");
                     }),
                 new UiEyeState(
-                    "вне-родителя",
-                    "значок шире своего ряда и не сжимается — значок и кнопка выходят за ряд",
+                    "outside-parent",
+                    "the badge is wider than its row and does not shrink - the badge and the button leave the row",
                     root =>
                     {
                         UiEyeFill.Text(root, "title", "Probe");
@@ -82,8 +82,8 @@ namespace UiEye
                         UiEyeFill.AddClass(root, "badge", "probe__badge--wide");
                     }),
                 new UiEyeState(
-                    "в-движении",
-                    "панель медленно едет (переход стиля на 10 с) — кадр не устаивается",
+                    "moving",
+                    "the panel moves slowly (a 10 s style transition) - the frame never settles",
                     root =>
                     {
                         UiEyeFill.Text(root, "title", "Probe");

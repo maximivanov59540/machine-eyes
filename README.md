@@ -10,7 +10,7 @@ Written with Claude.
 
 ![Contact sheet of the calibration panel: six states at two screen sizes](docs/images/probe-sheet.png)
 
-*The contact sheet of `проба`, the calibration panel that ships with the package. Rows are states, columns are screen
+*The contact sheet of `probe`, the calibration panel that ships with the package. Rows are states, columns are screen
 sizes, and every thumbnail has the same scale. The label above each frame gives its number of findings.*
 
 ## What ui-eye does
@@ -92,21 +92,21 @@ Close the editor, then list the panels the project has registered:
 node <tools>/ui-eye.js --list --project <project>
 ```
 
-The package always registers one panel, `проба` (Russian for "probe"): the calibration panel. Shoot it in its six states
+The package always registers one panel, `probe`: the calibration panel. Shoot it in its six states
 at 1920x1080 and 2560x1080:
 
 ```bash
-node <tools>/ui-eye.js --panel проба --project <project>
+node <tools>/ui-eye.js --panel probe --project <project>
 ```
 
 A run takes 25–60 seconds. The first run after a break takes about a minute and a half, most of it spent opening the
 project. The report looks like this:
 
 ```text
-ui-eye · «проба» · состояния: короткий, длинный, за-краем, сплющенный, вне-родителя, в-движении · размеры: 1920x1080, 2560x1080
+ui-eye · «probe» · состояния: short, long, offscreen, flattened, outside-parent, moving · размеры: 1920x1080, 2560x1080
 итог: НАХОДКИ — кадров 12, из них с находками 9 (код 1)
 ...
-  длинный  1920x1080  находок 2 · элементов 7, проверено 7, текстовых 4 · чтений 2
+  long  1920x1080  находок 2 · элементов 7, проверено 7, текстовых 4 · чтений 2
       текст-не-влез  Label #title  по ширине: нужно 971, есть 375
       текст-не-влез  Label #badge  по ширине: нужно 174, есть 117
 ...

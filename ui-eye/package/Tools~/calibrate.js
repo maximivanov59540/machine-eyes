@@ -4,7 +4,7 @@
  *
  * Каждая проверка сравнивает ответ инструмента с ожиданием, записанным ДО первого прогона, и печатает
  * «верно» или «НЕВЕРНО». Поломки нарочные: прибор, который ни разу не покраснел, — не прибор.
- * Ответы записаны на Unity 6000.4.7f1: на другой версии калибровка предупреждает, что матрица «пробы» может законно
+ * Ответы записаны на Unity 6000.4.7f1: на другой версии калибровка предупреждает, что матрица «probe» может законно
  * разойтись.
  *
  *   node Tools~/calibrate.js всё [ключи]           все проверки по очереди: линтер, затем четыре запуска Unity; таблица типов не
@@ -14,9 +14,9 @@
  *                                                   без годной таблицы типов его проверки типов — НЕВЕРНО, причина — первой строкой и под итогом
  *   node Tools~/calibrate.js замок [ключи]         проект «открыт» — замок держит этот процесс → отказ, Unity не запускается; строка
  *                                                   линтера в отчёте; «предупредить» и отказ линтера снимок не останавливают
- *   node Tools~/calibrate.js панель [ключи]        неизвестная панель → код 5, ответ Unity называет её и известную «пробу»; линтер
+ *   node Tools~/calibrate.js панель [ключи]        неизвестная панель → код 5, ответ Unity называет её и известную «probe»; линтер
  *                                                   панели не знает, но снимок не останавливает
- *   node Tools~/calibrate.js матрица [ключи]       «проба» целиком на 16:9 и 21:9 → точная матрица находок; пока идёт
+ *   node Tools~/calibrate.js матрица [ключи]       «probe» целиком на 16:9 и 21:9 → точная матрица находок; пока идёт
  *                                                   съёмка, второй снимок из другого процесса получает отказ калитки
  *   node Tools~/calibrate.js повтор [A B] [ключи]  один запрос дважды (или две готовые папки) → кадры и деревья побайтово равны
  *   node Tools~/calibrate.js компиляция [ключи]    ошибка в сборке-мишени → код 2 с файлом, строкой и CS0029; файл убран
@@ -34,7 +34,7 @@
  * убрался нарочный файл).
  *
  * НЕВЕРНО — ещё не приговор прибору: сперва кадр и дерево из папки прогона. Однажды расхождение кадр рассудил в пользу
- * прибора — ошибся автор ожидания («сплющенный», см. ожидание ниже), и исправлено было ожидание, с записью причины. Правка
+ * прибора — ошибся автор ожидания («flattened», см. ожидание ниже), и исправлено было ожидание, с записью причины. Правка
  * ожидания без такой записи превращает калибровку в эхо.
  */
 
@@ -60,8 +60,8 @@ const RECORDED_UNITY = "6000.4.7f1";
 const DEFAULT_BROKEN = "Assets/Calibration/Game";
 const DEFAULT_NO_ENGINE = "Assets/Calibration/NoEngine";
 
-const PROBE_ALL = { panel: "проба", states: [], sizes: ["1920x1080", "2560x1080"] };
-const PROBE_ONE = { panel: "проба", states: ["короткий"], sizes: ["1920x1080"] };
+const PROBE_ALL = { panel: "probe", states: [], sizes: ["1920x1080", "2560x1080"] };
+const PROBE_ONE = { panel: "probe", states: ["short"], sizes: ["1920x1080"] };
 
 // Имя, которого в реестре не будет никогда.
 const UNKNOWN_PANEL = "нет-такой-панели";
@@ -73,29 +73,29 @@ const BROKEN_SOURCE =
   "        private static readonly int Broken = \"не число\";\n    }\n}\n";
 
 /**
- * Ответ «пробы», записанный до первого прогона (UiEyeProbe.Panel): состояние → размер → находки «вид элемент»
+ * Ответ «probe», записанный до первого прогона (UiEyeProbe.Panel): состояние → размер → находки «вид элемент»
  * по порядку сортировки. Три последних состояния добавлены после первого прогона, когда оказалось, что
  * «за-родителя», «нулевой-размер» и «не-устоялся» ни разу не краснели.
  */
 const PROBE_EXPECTED = {
-  короткий: { "1920x1080": [], "2560x1080": [] },
-  длинный: {
+  short: { "1920x1080": [], "2560x1080": [] },
+  long: {
     "1920x1080": ["текст-не-влез Label #badge", "текст-не-влез Label #title"],
     "2560x1080": ["текст-не-влез Label #badge", "текст-не-влез Label #title"],
   },
-  "за-краем": { "1920x1080": ["за-краем VisualElement #panel"], "2560x1080": [] },
+  offscreen: { "1920x1080": ["за-краем VisualElement #panel"], "2560x1080": [] },
   // Исправлено после первого прогона. Первое ожидание было только «нулевой-размер #row». Кадр рассудил в пользу
   // прибора: под рядом нулевой высоты Unity кладёт детей с этой высотой пределом — рамка значка 8 px (одни отступы),
   // его «12» не видно вовсе; кнопка сжата до 22 px. Оба текста правда не влезли.
-  сплющенный: {
+  flattened: {
     "1920x1080": ["нулевой-размер VisualElement #row", "текст-не-влез Button #action", "текст-не-влез Label #badge"],
     "2560x1080": ["нулевой-размер VisualElement #row", "текст-не-влез Button #action", "текст-не-влез Label #badge"],
   },
-  "вне-родителя": {
+  "outside-parent": {
     "1920x1080": ["за-родителя Button #action", "за-родителя Label #badge"],
     "2560x1080": ["за-родителя Button #action", "за-родителя Label #badge"],
   },
-  "в-движении": { "1920x1080": ["не-устоялся кадр"], "2560x1080": ["не-устоялся кадр"] },
+  moving: { "1920x1080": ["не-устоялся кадр"], "2560x1080": ["не-устоялся кадр"] },
 };
 
 // Ключи командной строки → поле настроек.
@@ -157,7 +157,7 @@ async function lock(ctx) {
   const markup = readUnity(ctx, ctx.paths.markup);
 
   if (markup === null) {
-    throw new Error(`«проба» пакета не найдена: ${ctx.paths.markup}`);
+    throw new Error(`«probe» пакета не найдена: ${ctx.paths.markup}`);
   }
 
   const gate = takeGateOrRefuse(ctx);
@@ -189,7 +189,7 @@ async function lock(ctx) {
       // Линтер перед снимком: «предупредить» с поломкой имени и линтер, которому не с чем сверять, снимок не
       // останавливают — он доходит до замка и получает его отказ. Unity не запускается и здесь.
       warned = await shoot({ ...input, lint: "предупредить" }, { gate, lintInput: { overlay: { [ctx.paths.markup]: renamed } } });
-      // «Не с чем сверять» — убраны все файлы, где заводятся панели: «проба» пакета и панели проекта.
+      // «Не с чем сверять» — убраны все файлы, где заводятся панели: «probe» пакета и панели проекта.
       blind = await shoot(input, { gate, lintInput: { remove: registryFiles(ctx) } });
     } finally {
       closeSync(fd);
@@ -244,10 +244,10 @@ async function panel(ctx) {
   const result = await shoot({ panel: UNKNOWN_PANEL, sizes: ["1920x1080"], project: ctx.root });
   console.log(result.report);
   check(result.code === CODES.request, `код ${result.code}, ждали ${CODES.request} (плохой запрос)`);
-  // В отчёте есть и строка линтера, где тоже «нет панели» и «проба», — поэтому ищем в словах Unity (итог и список
+  // В отчёте есть и строка линтера, где тоже «нет панели» и «probe», — поэтому ищем в словах Unity (итог и список
   // реестра), иначе проверку выполнял бы за неё линтер.
   check(result.headline.includes(`нет панели «${UNKNOWN_PANEL}»`), "ответ Unity называет неизвестную панель");
-  check(/^ {2}«проба» — /m.test(result.report), "ответ Unity перечисляет реестр — в нём «проба»");
+  check(/^ {2}«probe» — /m.test(result.report), "ответ Unity перечисляет реестр — в нём «probe»");
   check(
     result.lint?.code === CODES.request && result.lint.stops === false && result.directory !== null,
     `линтер панели не знает (код ${result.lint?.code}), но снимок не остановил — ответ дала Unity (папка прогона ${result.directory ? "есть" : "нет"})`,
@@ -262,7 +262,7 @@ async function matrix(ctx) {
   run.catch(() => {});
   check(gateState() === "busy", "пока идёт съёмка, калитка занята");
 
-  const rival = await cli(ctx, ["--панель", "проба", "--состояния", "короткий", "--размеры", "1920x1080"]);
+  const rival = await cli(ctx, ["--панель", "probe", "--состояния", "short", "--размеры", "1920x1080"]);
   console.log(rival.stdout.trim());
   check(rival.code === CODES.refused, `второй снимок из другого процесса: код ${rival.code}, ждали ${CODES.refused}`);
   check(/идёт другой снимок ui-eye/.test(rival.stdout), "причина отказа — калитка");
@@ -300,7 +300,7 @@ function verifyMatrix(outcome) {
   for (const shot of shots) {
     const got = shot.findings.map((finding) => `${finding.kind} ${finding.element}`).sort();
     const expected = PROBE_EXPECTED[shot.state]?.[shot.size] ?? ["<ожидания нет>"];
-    const settled = shot.state !== "в-движении";
+    const settled = shot.state !== "moving";
     check(
       JSON.stringify(got) === JSON.stringify(expected),
       `${shot.state} ${shot.size}: [${got.join("; ")}], ждали [${expected.join("; ")}]`,
@@ -401,11 +401,11 @@ const LINT_ANCHOR = 'UiEyeFill.Text(root, "badge", "12");';
 const LINT_INDENT = "\n                        ";
 
 /**
- * Линтер «разметка ↔ код» без Unity. Ожидания записаны до первого прогона: «проба» на настоящем дереве — сверено 22 =
+ * Линтер «разметка ↔ код» без Unity. Ожидания записаны до первого прогона: «probe» на настоящем дереве — сверено 22 =
  * 18 Text + 4 AddClass, не проверено 0; у каждой поломки — свой вид и число находок. Строки находок ищутся в тексте
  * UiEyeProbe.cs, а не вписаны числами; сколько их и какого вида — вписано здесь.
- * В реестре проекта могут быть и свои панели: поломки «пробы» сверяются в её срезе (panel: «проба») — их числа от других
- * панелей не зависят; настоящее дерево — целиком: «проба» в нём ищется по имени, у всех панелей реестра разметка
+ * В реестре проекта могут быть и свои панели: поломки «probe» сверяются в её срезе (panel: «probe») — их числа от других
+ * панелей не зависят; настоящее дерево — целиком: «probe» в нём ищется по имени, у всех панелей реестра разметка
  * загружена, находок и непроверенного нет.
  */
 async function linter(ctx) {
@@ -420,7 +420,7 @@ async function linter(ctx) {
   const markup = readUnity(ctx, paths.markup);
 
   if (panels === null || markup === null) {
-    throw new Error(`«проба» пакета не найдена: ${[panels === null ? paths.panels : "", markup === null ? paths.markup : ""].filter(Boolean).join(", ")}`);
+    throw new Error(`«probe» пакета не найдена: ${[panels === null ? paths.panels : "", markup === null ? paths.markup : ""].filter(Boolean).join(", ")}`);
   }
 
   const titleLines = linesOf(panels, 'UiEyeFill.Text(root, "title"');
@@ -429,21 +429,21 @@ async function linter(ctx) {
   const badgeAddLines = linesOf(panels, 'UiEyeFill.AddClass(root, "badge"');
   const registryLines = linesOf(panels, "new UiEyePanel(");
   const shape = [titleLines, badgeLines, rowLines, badgeAddLines, registryLines].map((lines) => lines.length).join(", ");
-  check(shape === "6, 6, 1, 1, 1", `«проба» такая, какой её знает калибровка: Text #title, Text #badge, AddClass #row, AddClass #badge, панелей — ${shape}; ждали 6, 6, 1, 1, 1`);
+  check(shape === "6, 6, 1, 1, 1", `«probe» такая, какой её знает калибровка: Text #title, Text #badge, AddClass #row, AddClass #badge, панелей — ${shape}; ждали 6, 6, 1, 1, 1`);
 
   const real = lintCase(ctx, "настоящее дерево", {});
   const r = real.result;
-  const probe = r.panels.find((item) => item.name === "проба");
-  const through = (prefix) => r.lookups.filter((lookup) => lookup.panel === "проба" && lookup.call.startsWith(prefix)).length;
+  const probe = r.panels.find((item) => item.name === "probe");
+  const through = (prefix) => r.lookups.filter((lookup) => lookup.panel === "probe" && lookup.call.startsWith(prefix)).length;
   const noEngineRow = (result) => result.coverage.assemblies.find((row) => row.name === ctx.noEngine.name);
   check(real.code === CODES.clean, `код ${real.code}, ждали ${CODES.clean} (чисто)`);
   check(
     probe?.status === "ok" && probe.elements === 6 && r.panels.every((item) => item.status === "ok"),
-    `«проба» в реестре, разметка загружена, элементов 6; у всех панелей реестра разметка загружена: ${r.panels.map((item) => `«${item.name}» ${item.status} ${item.elements}`).join("; ")}`,
+    `«probe» в реестре, разметка загружена, элементов 6; у всех панелей реестра разметка загружена: ${r.panels.map((item) => `«${item.name}» ${item.status} ${item.elements}`).join("; ")}`,
   );
   check(
     probe?.checked === 22 && through("UiEyeFill.Text →") === 18 && through("UiEyeFill.AddClass →") === 4,
-    `у «пробы» сверено ${probe?.checked} = через Text ${through("UiEyeFill.Text →")} + через AddClass ${through("UiEyeFill.AddClass →")}; ждали 22 = 18 + 4`,
+    `у «probe» сверено ${probe?.checked} = через Text ${through("UiEyeFill.Text →")} + через AddClass ${through("UiEyeFill.AddClass →")}; ждали 22 = 18 + 4`,
   );
   check(r.findings.length === 0 && r.notChecked.length === 0, `у всего дерева находок ${r.findings.length}, не проверено ${r.notChecked.length}; ждали 0 и 0`);
   check(
@@ -452,7 +452,7 @@ async function linter(ctx) {
   );
   check(
     sameList(probe?.addedClasses ?? [], ["probe--moving", "probe--offscreen", "probe__badge--wide", "probe__row--flat"]),
-    `классы, которые добавляет код «пробы»: ${(probe?.addedClasses ?? []).join(", ")}; ждали четыре из состояний`,
+    `классы, которые добавляет код «probe»: ${(probe?.addedClasses ?? []).join(", ")}; ждали четыре из состояний`,
   );
   check(
     r.types.ok && r.coverage.filesWithParseProblems === 0,
@@ -485,7 +485,7 @@ async function linter(ctx) {
   );
 
   const renamed = markup.replace('name="title"', 'name="titel"');
-  const c = lintCase(ctx, "#title в разметке переименован в #titel", { panel: "проба", overlay: { [paths.markup]: renamed } }, renamed !== markup);
+  const c = lintCase(ctx, "#title в разметке переименован в #titel", { panel: "probe", overlay: { [paths.markup]: renamed } }, renamed !== markup);
   check(c.code === CODES.findings, `код ${c.code}, ждали ${CODES.findings} (находки)`);
   check(
     sameList(linesWith(c.result, "нет-в-разметке"), titleLines) && c.result.findings.length === 6,
@@ -498,7 +498,7 @@ async function linter(ctx) {
   );
 
   const retyped = markup.replace('<ui:Label name="badge"', '<ui:VisualElement name="badge"');
-  const d = lintCase(ctx, "#badge в разметке: Label → VisualElement", { panel: "проба", overlay: { [paths.markup]: retyped } }, retyped !== markup);
+  const d = lintCase(ctx, "#badge в разметке: Label → VisualElement", { panel: "probe", overlay: { [paths.markup]: retyped } }, retyped !== markup);
   check(d.code === CODES.findings, `код ${d.code}, ждали ${CODES.findings} (находки)`);
   check(
     sameList(linesWith(d.result, "не-тот-тип"), badgeLines) && d.result.findings.length === 6,
@@ -511,7 +511,7 @@ async function linter(ctx) {
   check(d.result.findings.length > 0 && !d.result.findings.some((finding) => badgeAddLines.includes(finding.line)), `AddClass #badge (строка ${badgeAddLines[0]}, ждёт VisualElement) — не находка`);
 
   const doubled = markup.replace('<ui:Button name="action"', '<ui:VisualElement name="row" /><ui:Button name="action"');
-  const e = lintCase(ctx, "в разметке второй #row", { panel: "проба", overlay: { [paths.markup]: doubled } }, doubled !== markup);
+  const e = lintCase(ctx, "в разметке второй #row", { panel: "probe", overlay: { [paths.markup]: doubled } }, doubled !== markup);
   check(
     e.code === CODES.findings && e.result.findings.length === 1 && e.result.findings[0].kind === "имя-не-одно" && e.result.findings[0].line === rowLines[0],
     `одна находка имя-не-одно на строке AddClass #row ${rowLines[0]}: ${describeFindings(e.result)}`,
@@ -531,7 +531,7 @@ async function linter(ctx) {
   // своего using нет: без этой строки обе ловушки поиска по классу для линтера не существуют.
   const withTraps = panels.replace(LINT_ANCHOR, LINT_ANCHOR + traps.map((line) => LINT_INDENT + line).join(""));
   const trapped = "using UnityEngine.UIElements;\n" + withTraps;
-  const f = lintCase(ctx, "константа, вычисляемое имя, ловушки комментария и строки, поиск по классу", { panel: "проба", overlay: { [paths.panels]: trapped } }, withTraps !== panels);
+  const f = lintCase(ctx, "константа, вычисляемое имя, ловушки комментария и строки, поиск по классу", { panel: "probe", overlay: { [paths.panels]: trapped } }, withTraps !== panels);
   const missing = f.result.findings.find((finding) => finding.kind === "класса-нет");
   check(
     f.code === CODES.findings && f.result.findings.length === 1 && Boolean(missing?.message.includes(".probe__rov")) && missing.suggestions.includes("probe__row"),
@@ -551,7 +551,7 @@ async function linter(ctx) {
   const g = lintCase(
     ctx,
     "#badge переехал в шаблон",
-    { panel: "проба", overlay: { [paths.markup]: templated, [paths.template]: badgeTemplate } },
+    { panel: "probe", overlay: { [paths.markup]: templated, [paths.template]: badgeTemplate } },
     templated.includes("<ui:Template") && templated.includes("<ui:Instance") && !templated.includes('<ui:Label name="badge"'),
   );
   check(
@@ -562,7 +562,7 @@ async function linter(ctx) {
   check(g.result.signature.some((item) => item.path === paths.template && item.mark === "наложено"), "шаблон попал в подпись и помечен «наложено»");
 
   const typo = templated.replace('src="ProbeBadge.uxml"', 'src="ProbeBadg.uxml"');
-  const g2 = lintCase(ctx, "шаблон с опечаткой в src", { panel: "проба", overlay: { [paths.markup]: typo, [paths.template]: badgeTemplate } }, typo !== templated);
+  const g2 = lintCase(ctx, "шаблон с опечаткой в src", { panel: "probe", overlay: { [paths.markup]: typo, [paths.template]: badgeTemplate } }, typo !== templated);
   const lost = g2.result.findings[0];
   check(
     g2.code === CODES.findings && g2.result.findings.length === 1 && lost.kind === "разметки-нет" && lost.file === paths.markup && lost.line === 3 && lost.message.includes("ProbeBadg.uxml"),
@@ -590,7 +590,7 @@ async function linter(ctx) {
     "",
   ].join("\n");
   const withController = panels.replace(LINT_ANCHOR, LINT_ANCHOR + LINT_INDENT + "new ProbeController(root);");
-  const h = lintCase(ctx, 'контроллер через new: Q<Button>("title")', { panel: "проба", overlay: { [paths.panels]: withController, [paths.controller]: controller } }, withController !== panels);
+  const h = lintCase(ctx, 'контроллер через new: Q<Button>("title")', { panel: "probe", overlay: { [paths.panels]: withController, [paths.controller]: controller } }, withController !== panels);
   const wrongType = h.result.findings[0];
   check(
     h.code === CODES.findings && h.result.findings.length === 1 && wrongType.kind === "не-тот-тип" && wrongType.file === paths.controller && wrongType.line === 9,
@@ -625,11 +625,11 @@ async function linter(ctx) {
     `код ${i.code}, сверено ${i.result.coverage.checked} (у настоящего дерева ${r.coverage.checked}); не проверено одно — не-с-чем-сверить в ProbeOrphan.cs:9: ` +
       `${i.result.notChecked.map((item) => `${item.kind} ${item.file}:${item.line}`).join("; ") || "нет"}`,
   );
-  const scoped = lint({ panel: "проба", overlay: { [paths.orphan]: orphan }, project: ctx.root });
-  check(scoped.code === CODES.clean && scoped.result.notChecked.length === 0, `с панелью «проба» чужое обращение не в её списке: код ${scoped.code}, не проверено ${scoped.result.notChecked.length}`);
+  const scoped = lint({ panel: "probe", overlay: { [paths.orphan]: orphan }, project: ctx.root });
+  check(scoped.code === CODES.clean && scoped.result.notChecked.length === 0, `с панелью «probe» чужое обращение не в её списке: код ${scoped.code}, не проверено ${scoped.result.notChecked.length}`);
 
   const pathTypo = panels.replace('Folder + "/Probe/Probe.uxml"', 'Folder + "/Probe/Prob.uxml"');
-  const j = lintCase(ctx, "опечатка в пути разметки в реестре", { panel: "проба", overlay: { [paths.panels]: pathTypo } }, pathTypo !== panels);
+  const j = lintCase(ctx, "опечатка в пути разметки в реестре", { panel: "probe", overlay: { [paths.panels]: pathTypo } }, pathTypo !== panels);
   const noMarkup = j.result.findings[0];
   check(
     j.code === CODES.findings && j.result.findings.length === 1 && noMarkup.kind === "разметки-нет" && noMarkup.file === paths.panels && noMarkup.line === registryLines[0],
@@ -664,7 +664,7 @@ async function linter(ctx) {
   if (table === null) {
     check(false, `таблица типов проекта ${TYPES_TABLE} ${tableText === null ? "не снята" : "не разбирается"} — случай «таблица с чужой версии Unity» не проверен; таблицу снимает каждый снимок, явно — types.js`);
   } else {
-    const l = lintCase(ctx, "таблица типов с чужой версии Unity (и #badge — VisualElement)", { panel: "проба", overlay: { [paths.markup]: retyped }, typesTable: { ...table, unityVersion: "0000.0.0f0" } });
+    const l = lintCase(ctx, "таблица типов с чужой версии Unity (и #badge — VisualElement)", { panel: "probe", overlay: { [paths.markup]: retyped }, typesTable: { ...table, unityVersion: "0000.0.0f0" } });
     check(l.code === CODES.clean && l.result.types.ok === false && l.result.types.reason.includes("0000.0.0f0"), `код ${l.code}; таблица не годна: ${l.result.types.reason}`);
     check(
       l.result.findings.length === 0 && l.result.coverage.typesSkipped === 18,
@@ -676,8 +676,8 @@ async function linter(ctx) {
   const unknown = lint({ panel: UNKNOWN_PANEL, project: ctx.root });
   console.log(`\n--- линтер: неизвестная панель\n${unknown.report}`);
   check(
-    unknown.code === CODES.request && unknown.report.includes(`«${UNKNOWN_PANEL}»`) && unknown.report.includes("«проба»"),
-    `код ${unknown.code}, ждали ${CODES.request}; ответ называет неизвестную панель и «пробу»`,
+    unknown.code === CODES.request && unknown.report.includes(`«${UNKNOWN_PANEL}»`) && unknown.report.includes("«probe»"),
+    `код ${unknown.code}, ждали ${CODES.request}; ответ называет неизвестную панель и «probe»`,
   );
   const blank = lint({ panel: "  ", project: ctx.root });
   check(blank.code === CODES.request, `пустое имя панели: код ${blank.code}, ждали ${CODES.request}`);
@@ -765,7 +765,7 @@ function sources(ctx) {
 
 /**
  * Файлы, где заводятся панели ui-eye: все .cs, которые видит линтер, с «new UiEyePanel(» в тексте — своим обходом, а не
- * ответом линтера (прибор не готовит себе контроль). Их может быть несколько: «проба» пакета и панели проекта своими файлами.
+ * ответом линтера (прибор не готовит себе контроль). Их может быть несколько: «probe» пакета и панели проекта своими файлами.
  */
 function registryFiles(ctx) {
   return sources(ctx)
@@ -984,7 +984,7 @@ function describe(ctx) {
   console.log(`калибровка: проект ${ctx.root} (${ctx.how}); Unity проекта ${version}, ответы записаны на ${RECORDED_UNITY}`);
 
   if (version !== RECORDED_UNITY) {
-    console.log(`ВНИМАНИЕ: Unity проекта ${version}, а ответы записаны на ${RECORDED_UNITY} — матрица «пробы» может законно разойтись; НЕВЕРНО сверять с кадром`);
+    console.log(`ВНИМАНИЕ: Unity проекта ${version}, а ответы записаны на ${RECORDED_UNITY} — матрица «probe» может законно разойтись; НЕВЕРНО сверять с кадром`);
   }
 
   console.log(

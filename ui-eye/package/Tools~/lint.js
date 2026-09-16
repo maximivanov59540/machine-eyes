@@ -3,7 +3,7 @@
  * ui-eye — линтер «разметка ↔ код»: командная строка. Unity не нужна, редактор может быть открыт.
  *
  *   node Tools~/lint.js                    все панели реестра
- *   node Tools~/lint.js --панель проба     одна панель
+ *   node Tools~/lint.js --панель probe     одна панель
  *   node Tools~/lint.js --json             ответ целиком, JSON (для скриптов)
  *   node Tools~/lint.js --проект <папка>   проект Unity; без ключа — переменная UIEYE_PROJECT или поиск вверх
  *                                          от текущей папки
