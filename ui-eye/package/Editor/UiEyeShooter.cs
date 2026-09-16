@@ -427,8 +427,8 @@ namespace UiEye
 
         private static void BuildSheet()
         {
-            var header = "ui-eye · «" + _panel.Name + "» · HEAD " + Short(_request.head) + " · разметка "
-                + Short(_result.markupHash) + " · Unity " + Application.unityVersion + " · масштаб 1:1";
+            var header = "ui-eye · «" + _panel.Name + "» · HEAD " + Short(_request.head) + " · markup "
+                + Short(_result.markupHash) + " · Unity " + Application.unityVersion + " · scale 1:1";
             int width;
             int height;
             var sheet = UiEyeSheet.Build(header, States.Count, Sizes, Cells, out width, out height);
@@ -563,7 +563,9 @@ namespace UiEye
             Cells.Add(new UiEyeSheetCell
             {
                 Caption = job.State.Name + " · " + size + " · "
-                    + (shot.findings.Count == 0 ? "находок нет" : "находок: " + shot.findings.Count),
+                    + (shot.findings.Count == 0
+                        ? "no findings"
+                        : shot.findings.Count + (shot.findings.Count == 1 ? " finding" : " findings")),
                 Image = _readback,
             });
             _readback = null;

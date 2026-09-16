@@ -2,6 +2,15 @@
 
 Notable changes to the `com.machine-eyes.ui-eye` package. Versions follow Semantic Versioning.
 
+## [0.1.2] - 2026-09-16
+
+### Changed
+
+- The words ui-eye draws into the contact sheet are English: `markup` and `scale 1:1` in the header, `no findings`
+  and `2 findings` under each frame. The sheet is the part a person looks at; the answer in the terminal, which an
+  agent reads, is unchanged. Everything else on the sheet already came from the panel itself — its name, its state
+  names, the screen size — so a panel written in English now gives a sheet in English throughout.
+
 ## [0.1.1] - 2026-09-16
 
 ### Changed
