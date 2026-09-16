@@ -1,0 +1,120 @@
+name: ui-eye refused, or the verdict looks wrong
+description: The shot or the linter refused on your machine, or it reported something you believe is not true.
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The most useful thing you can send is **what ui-eye printed**. It names the cause and the exit code, and
+        that is usually the whole diagnosis. Everything else below is one click.
+
+  - type: textarea
+    id: printed
+    attributes:
+      label: What ui-eye printed
+      description: The whole answer, including the line with the exit code. Paste it as text, not as a screenshot.
+      render: shell
+    validations:
+      required: true
+
+  - type: dropdown
+    id: command
+    attributes:
+      label: What you ran
+      options:
+        - ui-eye.js (a shot)
+        - lint.js (the linter alone)
+        - types.js (the type table)
+        - calibrate.js (the calibration)
+        - the MCP server (ui_eye_shot / ui_eye_lint)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: panel
+    attributes:
+      label: Which panel
+      description: >-
+        This one matters. The package ships its own calibration panel, «проба». If that one fails too, the tool is at
+        fault. If only your panel fails, the answer is usually in your markup or in the registry.
+      options:
+        - my own panel
+        - the bundled calibration panel «проба»
+        - both
+        - it never got as far as a panel
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: ui-eye version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+
+  - type: input
+    id: unity
+    attributes:
+      label: Unity version
+      description: The exact one, from ProjectSettings/ProjectVersion.txt.
+      placeholder: "6000.4.7f1"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      description: Version 0.1 shoots only on Windows. The linter is expected to work everywhere.
+      options:
+        - Windows 11
+        - Windows 10
+        - macOS
+        - Linux
+        - other
+    validations:
+      required: true
+
+  - type: input
+    id: node
+    attributes:
+      label: Node.js version
+      description: "`node --version`. ui-eye needs 18 or newer."
+      placeholder: "v18.20.0"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: install
+    attributes:
+      label: How the package got into the project
+      options:
+        - OpenUPM
+        - a git URL in Packages/manifest.json
+        - a copied folder
+        - other
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: editor
+    attributes:
+      label: Before you send
+      options:
+        - label: The Unity editor was closed on the project while the shot ran (a shot answers code 3 otherwise).
+          required: false
+        - label: I read the requirements in the README — Windows, Unity 6000.4, Node 18 or newer.
+          required: false
+
+  - type: textarea
+    id: anything
+    attributes:
+      label: Anything else
+      description: >-
+        Whatever did not fit above: what you expected, what you had already tried, an unusual Unity install, a panel
+        built in an unusual way, a screenshot of the contact sheet. If none of the fields above fit your case at all,
+        this one is enough — say it in your own words.
+    validations:
+      required: false
