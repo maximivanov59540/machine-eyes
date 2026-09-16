@@ -34,8 +34,8 @@ namespace UiEye
                     "всё помещается — находок быть не должно",
                     root =>
                     {
-                        UiEyeFill.Text(root, "title", "Проба");
-                        UiEyeFill.Text(root, "body", "Короткий абзац.");
+                        UiEyeFill.Text(root, "title", "Probe");
+                        UiEyeFill.Text(root, "body", "A short paragraph.");
                         UiEyeFill.Text(root, "badge", "12");
                     }),
                 new UiEyeState(
@@ -43,21 +43,21 @@ namespace UiEye
                     "заголовок и значок не влезают; длинный абзац переносится и находкой не считается",
                     root =>
                     {
-                        UiEyeFill.Text(root, "title", "Заголовок, который заведомо не помещается в ширину панели");
+                        UiEyeFill.Text(root, "title", "A heading that is certainly too wide to fit the width of this panel");
                         UiEyeFill.Text(
                             root,
                             "body",
-                            "Длинный абзац переносится по словам и растягивает панель вниз. Это отрицательный "
-                                + "контроль: перенос строк не должен считаться словами «текст не влез».");
-                        UiEyeFill.Text(root, "badge", "1 234 567 890 гривен");
+                            "A long paragraph wraps by words and stretches the panel downwards. This is a negative "
+                                + "control: wrapping must not be counted as text that does not fit.");
+                        UiEyeFill.Text(root, "badge", "1 234 567 890 coins");
                     }),
                 new UiEyeState(
                     "за-краем",
                     "панель сдвинута вправо: на 1920 выходит за край экрана, на 2560 помещается",
                     root =>
                     {
-                        UiEyeFill.Text(root, "title", "Проба");
-                        UiEyeFill.Text(root, "body", "Панель сдвинута вправо.");
+                        UiEyeFill.Text(root, "title", "Probe");
+                        UiEyeFill.Text(root, "body", "The panel is pushed to the right.");
                         UiEyeFill.Text(root, "badge", "12");
                         UiEyeFill.AddClass(root, "panel", "probe--offscreen");
                     }),
@@ -66,8 +66,8 @@ namespace UiEye
                     "ряд сплющен в ноль по высоте — «нулевой размер» у #row; значок и кнопка сплющены с ним, их текст не влезает",
                     root =>
                     {
-                        UiEyeFill.Text(root, "title", "Проба");
-                        UiEyeFill.Text(root, "body", "Ряд под абзацем сплющен.");
+                        UiEyeFill.Text(root, "title", "Probe");
+                        UiEyeFill.Text(root, "body", "The row below the paragraph is flattened.");
                         UiEyeFill.Text(root, "badge", "12");
                         UiEyeFill.AddClass(root, "row", "probe__row--flat");
                     }),
@@ -76,8 +76,8 @@ namespace UiEye
                     "значок шире своего ряда и не сжимается — значок и кнопка выходят за ряд",
                     root =>
                     {
-                        UiEyeFill.Text(root, "title", "Проба");
-                        UiEyeFill.Text(root, "body", "Значок шире своего ряда.");
+                        UiEyeFill.Text(root, "title", "Probe");
+                        UiEyeFill.Text(root, "body", "The badge is wider than its row.");
                         UiEyeFill.Text(root, "badge", "12");
                         UiEyeFill.AddClass(root, "badge", "probe__badge--wide");
                     }),
@@ -86,8 +86,8 @@ namespace UiEye
                     "панель медленно едет (переход стиля на 10 с) — кадр не устаивается",
                     root =>
                     {
-                        UiEyeFill.Text(root, "title", "Проба");
-                        UiEyeFill.Text(root, "body", "Панель в движении.");
+                        UiEyeFill.Text(root, "title", "Probe");
+                        UiEyeFill.Text(root, "body", "The panel is moving.");
                         UiEyeFill.Text(root, "badge", "12");
                         UiEyeFill.AddClass(root, "panel", "probe--moving");
                     }));

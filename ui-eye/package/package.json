@@ -1,6 +1,6 @@
 {
   "name": "com.machine-eyes.ui-eye",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "displayName": "ui-eye",
   "description": "Machine eye for UI Toolkit panels: one cold batch run of the Unity editor shoots a panel in every requested state and screen size and returns a verdict in numbers, with frames, element trees and a contact sheet.",
   "unity": "6000.4",

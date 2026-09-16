@@ -2,6 +2,15 @@
 
 Notable changes to the `com.machine-eyes.ui-eye` package. Versions follow Semantic Versioning.
 
+## [0.1.1] - 2026-09-16
+
+### Changed
+
+- The calibration panel «проба» now speaks English. It is the first thing a new user shoots, and it
+  used to greet them in Russian. Only the texts inside the panel changed; the state names, the findings and the
+  calibration are the same, and the calibration confirms it: 129 checks right out of 129. Two numbers in the README
+  sample follow the new texts: the heading needs 971 pixels instead of 988, the badge 174 instead of 190.
+
 ## [0.1.0] - 2026-09-16
 
 The first public version.
